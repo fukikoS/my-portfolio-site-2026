@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Site
 
-## Getting Started
+制作実績（Works）と個人プロジェクト（Projects）を掲載するポートフォリオサイトです。案件詳細は [microCMS](https://microcms.io/) から取得し、モーダルで表示します。サイト全体は Basic 認証で保護されています。
 
-First, run the development server:
+## 🚀 Project Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+/
+├── public/
+├── src
+│   ├── components
+│   │   ├── Header.astro       # 共通ヘッダー・ナビゲーション
+│   │   ├── CaseGrid.astro     # 一覧カード + モーダル用テンプレート
+│   │   └── CaseModal.astro    # 案件詳細モーダル本体
+│   ├── layouts
+│   │   └── Layout.astro       # 共通レイアウト
+│   ├── lib
+│   │   └── microcms.ts        # microCMS クライアント・型定義
+│   ├── styles
+│   │   └── global.css
+│   ├── middleware.ts          # サイト全体の Basic 認証
+│   └── pages
+│       ├── index.astro        # トップページ
+│       ├── works.astro        # 制作実績一覧
+│       └── projects.astro     # 個人プロジェクト一覧
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 環境変数
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`.env.example` をコピーして `.env` を作成し、値を設定してください。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sh
+cp .env.example .env
+```
 
-## Learn More
+| 変数名                    | 説明                                                          |
+| :------------------------- | :------------------------------------------------------------ |
+| `MICROCMS_SERVICE_DOMAIN`  | microCMS のサービスドメイン                                   |
+| `MICROCMS_API_KEY`         | microCMS の API キー                                           |
+| `BASIC_AUTH_USER`          | サイト全体の Basic 認証ユーザー名（未設定時は認証をスキップ） |
+| `BASIC_AUTH_PASSWORD`      | サイト全体の Basic 認証パスワード                              |
 
-To learn more about Next.js, take a look at the following resources:
+デプロイ先（Vercel）でも同じ環境変数を Project Settings > Environment Variables に設定してください。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### microCMS のスキーマ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`projects` という単一のAPI（リスト形式）に、制作実績・個人プロジェクトの両方を登録します。`type` フィールドの値で振り分けます。
 
-## Deploy on Vercel
+| フィールドID       | 型                             | 説明                               |
+| :------------------ | :------------------------------ | :---------------------------------- |
+| `project_name`      | テキストフィールド              | 案件名                              |
+| `site_url`          | テキストフィールド（任意・URL） | サイトURL                           |
+| `site_image`        | 画像                             | サムネイル・詳細用の画像            |
+| `overview`          | テキストエリア                  | 概要（一覧カード・詳細モーダル共通） |
+| `type`              | セレクトフィールド              | `案件実績` / `個人プロジェクト`      |
+| `technologies`      | セレクトフィールド（複数選択可） | 使用技術                            |
+| `responsibilities`  | テキストフィールド（任意）       | 担当領域                            |
+| `note`               | テキストエリア（任意）          | 備考                                |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`works` ページは `type` が `案件実績`、`projects` ページは `個人プロジェクト` のコンテンツのみを `filters` クエリで絞り込んで表示します（[src/lib/microcms.ts](src/lib/microcms.ts)）。フィールドIDや選択肢のラベルを変更した場合は同ファイルの `Project` 型と `getList` の `filters` を合わせて調整してください。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🧞 Commands
+
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`              | Installs dependencies                            |
+| `npm run dev`               | Starts local dev server at `localhost:4321`      |
+| `npm run build`             | Build your production site to `./dist/`          |
+| `npm run preview`           | Preview your build locally, before deploying     |
+| `npm run astro ...`         | Run CLI commands like `astro add`, `astro check` |
+
+## Basic 認証について
+
+`src/middleware.ts` で全リクエストを検証しています。`BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD` が未設定の場合は認証をスキップするため、ローカル開発では `.env` を空のままにしても閲覧できます。本番公開前に必ず値を設定してください。

@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CaseGrid from '../components/CaseGrid.astro';
+import { getProjects } from '../lib/microcms';
+
+const projects = await getProjects();
+---
+
+<Layout title="Projects" description="個人プロジェクトの一覧です。">
+	<main class="container" id="content" tabindex="-1">
+		<div class="page-header">
+			<h1>Projects</h1>
+			<p>勉強のために個人で開発したプロジェクトです。</p>
+		</div>
+		<CaseGrid items={projects} emptyMessage="現在公開中の個人プロジェクトはありません。" />
+	</main>
+</Layout>

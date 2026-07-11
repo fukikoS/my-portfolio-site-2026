@@ -1,0 +1,139 @@
+---
+import type { Project } from '../lib/microcms';
+import CaseModal from './CaseModal.astro';
+
+interface Props {
+	items: Project[];
+	emptyMessage: string;
+}
+
+const { items, emptyMessage } = Astro.props;
+---
+
+{
+	items.length === 0 ? (
+		<p class="empty">{emptyMessage}</p>
+	) : (
+		<ul class="grid">
+			{items.map((item) => (
+				<li class="card">
+					<button type="button" class="card-trigger" data-case-id={item.id}>
+						<span class="visually-hidden">{item.project_name} の詳細を見る</span>
+					</button>
+					<img src={`${item.site_image.url}?w=480&h=320&fit=crop`} alt="" loading="lazy" />
+					<h3>{item.project_name}</h3>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+{
+	items.map((item) => (
+		<template data-case-id={item.id}>
+			<img src={`${item.site_image.url}?w=680`} alt="" />
+			<h2>{item.project_name}</h2>
+			{item.technologies.length > 0 && (
+				<div class="tags">
+					{item.technologies.map((tech) => (
+						<span class="tag">{tech}</span>
+					))}
+				</div>
+			)}
+			<p class="overview">{item.overview}</p>
+			{item.responsibilities && (
+				<dl class="meta">
+					<dt>担当内容</dt>
+					<dd>{item.responsibilities}</dd>
+				</dl>
+			)}
+			{item.note && <p class="note">{item.note}</p>}
+			{item.site_url && (
+        <dl class="meta">
+          <dt>URL</dt>
+          <dd>
+            <a class="button" href={item.site_url} target="_blank" rel="noopener noreferrer">{item.site_url}</a>
+          </dd>
+        </dl>
+      )}
+				{item.github && (
+        <dl class="meta">
+          <dt>GitHub</dt>
+          <dd>
+            <a class="button" href={item.github} target="_blank" rel="noopener noreferrer">{item.github}</a>
+          </dd>
+        </dl>
+      )}
+		</template>
+	))
+}
+
+<CaseModal />
+
+<style>
+	.empty {
+		color: var(--color-text-muted);
+		text-align: center;
+		padding: 64px 0;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 24px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.card {
+		position: relative;
+		text-align: left;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		transition:
+			transform 0.15s ease,
+			border-color 0.15s ease;
+	}
+
+	.card:hover {
+		transform: translateY(-2px);
+		border-color: var(--color-accent);
+	}
+
+	.card-trigger {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		width: 100%;
+		background: none;
+		border: none;
+		border-radius: inherit;
+		padding: 0;
+		margin: 0;
+		cursor: pointer;
+	}
+
+	.card img {
+		width: 100%;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+		border-radius: 12px 12px 0 0;
+	}
+
+	.card h3 {
+		font-size: 16px;
+		padding: 16px;
+	}
+
+	.card p {
+		font-size: 13px;
+		color: var(--color-text-muted);
+		padding: 0 16px 16px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

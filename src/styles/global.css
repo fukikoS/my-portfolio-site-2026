@@ -1,0 +1,101 @@
+:root {
+	--color-bg: #0b0b0f;
+	--color-surface: #16161c;
+	--color-border: #2a2a33;
+	--color-text: #f2f2f5;
+	--color-text-muted: #9a9aa5;
+	--color-accent: #7c8cff;
+	--max-width: 960px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-family:
+		-apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP',
+		Roboto, sans-serif;
+	line-height: 1.7;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: inherit;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+h1,
+h2,
+h3,
+p {
+	margin: 0;
+}
+
+.container {
+	max-width: var(--max-width);
+	margin: 0 auto;
+	padding: 16px 16px 96px;
+
+  @media (min-width: 768px) {
+    padding: 24px 24px 96px;
+  }
+}
+
+.page-header {
+	margin-bottom: 40px;
+}
+
+.page-header h1 {
+	font-size: 28px;
+	margin-bottom: 8px;
+}
+
+.page-header p {
+	color: var(--color-text-muted);
+	font-size: 15px;
+}
+
+.visually-hidden:where(:not(:focus-within, :active)) {
+	position: absolute !important;
+	clip-path: inset(50%) !important;
+	overflow: hidden !important;
+	width: 1px !important;
+	height: 1px !important;
+	margin: -1px !important;
+	padding: 0 !important;
+	border: 0 !important;
+	white-space: nowrap !important;
+}
+
+.skip-link {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	z-index: 100;
+	background: var(--color-surface);
+	color: var(--color-text);
+	padding: 8px 16px;
+	border-radius: 8px;
+	border: 1px solid var(--color-border);
+	text-decoration: none;
+}
+
+:where(a:any-link, button):focus-visible {
+	outline: 3px solid var(--color-accent);
+	outline-offset: 3px;
+}

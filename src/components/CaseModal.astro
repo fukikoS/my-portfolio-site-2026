@@ -1,0 +1,158 @@
+---
+// カード側の <template data-case-id="..."> の中身をクリック時に流し込む汎用モーダル。
+// 同一ページ内に複数配置しても id="case-modal" は1つだけにする。
+---
+
+<dialog id="case-modal" closedby="any">
+	<button type="button" class="close" aria-label="閉じる" data-close-modal>&times;</button>
+	<div class="modal-body" data-modal-body></div>
+</dialog>
+
+<style>
+	dialog {
+		width: min(680px, calc(100vw - 32px));
+		max-height: calc(100vh - 64px);
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		background: var(--color-surface);
+		color: var(--color-text);
+		padding: 32px;
+	}
+
+	dialog::backdrop {
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(2px);
+	}
+
+	.close {
+		position: sticky;
+		top: 0;
+		float: right;
+		background: none;
+		border: none;
+		color: var(--color-text-muted);
+		font-size: 28px;
+		line-height: 1;
+		cursor: pointer;
+		padding: 4px 8px;
+	}
+
+	.close:hover {
+		color: var(--color-text);
+	}
+
+	.modal-body :global(img) {
+		border-radius: 8px;
+		margin-bottom: 16px;
+	}
+
+	.modal-body :global(h2) {
+		font-size: 22px;
+		margin-bottom: 8px;
+	}
+
+	.modal-body :global(.tags) {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin-bottom: 16px;
+	}
+
+	.modal-body :global(.tag) {
+		font-size: 12px;
+		color: var(--color-text-muted);
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		padding: 2px 10px;
+	}
+
+	.modal-body :global(.overview) {
+		color: #fff;
+		font-size: 15px;
+		white-space: pre-line;
+		margin-bottom: 16px;
+	}
+
+	.modal-body :global(.meta) {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 4px 12px;
+		margin-bottom: 16px;
+	}
+
+	.modal-body :global(.meta dt) {
+		color: var(--color-text-muted);
+		font-size: 13px;
+	}
+
+	.modal-body :global(.meta dd) {
+		margin: 0;
+		font-size: 13px;
+	}
+
+	.modal-body :global(.note) {
+		color: var(--color-text-muted);
+		font-size: 13px;
+		white-space: pre-line;
+		border-top: 1px solid var(--color-border);
+		padding-top: 16px;
+	}
+
+	.modal-body :global(.link) {
+		display: inline-block;
+		margin-top: 16px;
+		color: var(--color-accent);
+		text-decoration: none;
+		font-size: 14px;
+	}
+
+	.modal-body :global(.link:hover) {
+		text-decoration: underline;
+	}
+</style>
+
+<script>
+	const dialog = document.querySelector<HTMLDialogElement>('#case-modal');
+	const modalBody = dialog?.querySelector<HTMLElement>('[data-modal-body]');
+
+	if (dialog && modalBody) {
+		document.addEventListener('click', (event) => {
+			const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-case-id]');
+			if (!trigger || trigger.tagName === 'TEMPLATE') return;
+
+			const caseId = trigger.dataset.caseId;
+			const template = document.querySelector<HTMLTemplateElement>(
+				`template[data-case-id="${caseId}"]`,
+			);
+			if (!template) return;
+
+			modalBody.replaceChildren(template.content.cloneNode(true));
+
+			const heading = modalBody.querySelector('h2');
+			if (heading) {
+				heading.id ||= 'case-modal-title';
+				dialog.setAttribute('aria-labelledby', heading.id);
+			}
+
+			dialog.showModal();
+		});
+
+		dialog.querySelector('[data-close-modal]')?.addEventListener('click', () => dialog.close());
+
+		// closedby="any" は一部ブラウザ未対応のため、背景クリックでの light-dismiss をフォールバック実装する
+		if (!('closedBy' in HTMLDialogElement.prototype)) {
+			dialog.addEventListener('click', (event) => {
+				if (event.target !== dialog) return;
+
+				const rect = dialog.getBoundingClientRect();
+				const isInsideDialog =
+					rect.top <= event.clientY &&
+					event.clientY <= rect.top + rect.height &&
+					rect.left <= event.clientX &&
+					event.clientX <= rect.left + rect.width;
+
+				if (!isInsideDialog) dialog.close();
+			});
+		}
+	}
+</script>

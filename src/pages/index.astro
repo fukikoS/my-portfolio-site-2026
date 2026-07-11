@@ -1,0 +1,183 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getProfile } from '../lib/microcms';
+import { SITE_NAME } from '../constants';
+
+const profile = await getProfile();
+const skills =
+	profile?.skills
+		.split('\n')
+		.map((skill) => skill.trim().replace(/^[・\-*]\s*/, ''))
+		.filter(Boolean) ?? [];
+---
+
+<Layout title="Portfolio" description="制作実績・個人プロジェクトをまとめたポートフォリオサイトです。">
+	<main class="container" id="content" tabindex="-1">
+		<section class="hero">
+			<h1>{SITE_NAME}</h1>
+			<p>制作実績と個人プロジェクトをまとめています。</p>
+			<div class="links">
+				<a class="button" href="/works">制作実績を見る</a>
+				<a class="button outline" href="/projects">個人プロジェクトを見る</a>
+			</div>
+		</section>
+
+		{
+			profile && (
+				<section class="profile">
+					<div class="profile-intro">
+						<h2 class="eyebrow">About</h2>
+						<p>{profile.introduction}</p>
+					</div>
+					<div class="profile-intro">
+						<h2 class="eyebrow">Career Vision</h2>
+						<p>{profile.career_vision}</p>
+					</div>
+
+
+					{skills.length > 0 && (
+						<div class="">
+							<h2 class="eyebrow">Skills</h2>
+							<ul class="skill-list">
+								{skills.map((skill) => (
+									<li class="skill-pill">{skill}</li>
+								))}
+							</ul>
+						</div>
+					)}
+					<div class="hobbies-note">
+						<span class="hobbies-label">+ Hobbies</span>
+						<p>{profile.hobbies}</p>
+					</div>
+				</section>
+			)
+		}
+	</main>
+</Layout>
+
+<style>
+	.hero {
+		min-height: calc(100vh - 200px);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 16px;
+	}
+
+	.hero h1 {
+		font-size: 40px;
+	}
+
+	.hero p {
+		color: var(--color-text-muted);
+		font-size: 16px;
+	}
+
+	.links {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-top: 16px;
+    max-width: 220px;
+    text-align: center;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      gap: 16px;
+      max-width: 100%;
+    }
+	}
+
+	.button {
+		display: inline-block;
+		padding: 12px 24px;
+		border-radius: 8px;
+		text-decoration: none;
+		font-size: 14px;
+		background: var(--color-accent);
+		color: #0b0b0f;
+		font-weight: 600;
+	}
+
+	.button.outline {
+		background: transparent;
+		color: var(--color-text);
+		border: 1px solid var(--color-border);
+	}
+
+	.profile {
+		padding-top: 64px;
+		margin-top: 64px;
+		border-top: 1px solid var(--color-border);
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+
+	.eyebrow {
+		display: inline-block;
+		font-size: 1rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+		margin-bottom: 12px;
+	}
+
+	.profile-intro p {
+		font-size: 17px;
+		line-height: 1.9;
+		white-space: pre-line;
+		max-width: 68ch;
+	}
+
+	.hobbies-note {
+		align-self: flex-start;
+		max-width: 40ch;
+		padding: 14px 20px;
+		border: 1px dashed var(--color-border);
+		border-radius: 12px;
+	}
+
+	.hobbies-label {
+		display: inline-block;
+		font-size: 11px;
+		font-weight: 600;
+		color: var(--color-text-muted);
+		margin-bottom: 6px;
+	}
+
+	.hobbies-note p {
+		font-size: 13px;
+		line-height: 1.7;
+		color: var(--color-text-muted);
+		white-space: pre-line;
+	}
+
+	.skill-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.skill-pill {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--color-text);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		padding: 8px 16px;
+		transition:
+			border-color 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.skill-pill:hover {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+</style>

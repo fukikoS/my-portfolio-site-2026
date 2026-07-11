@@ -1,0 +1,83 @@
+---
+import { SITE_NAME } from '../constants';
+
+const navItems = [
+	{ href: '/', label: 'Top' },
+	{ href: '/works', label: 'Works' },
+	{ href: '/projects', label: 'Projects' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<a href="#content" class="skip-link visually-hidden">本文へスキップ</a>
+<header>
+	<a href="/" class="logo">{SITE_NAME}</a>
+	<nav aria-label="Primary">
+		<ul>
+			{
+				navItems.map((item) => (
+					<li>
+						<a href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>
+							{item.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+</header>
+
+<style>
+	header {
+		max-width: var(--max-width);
+		margin: 0 auto;
+		padding: 16px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+    @media (min-width: 768px) {
+      padding: 24px;
+    }
+	}
+
+	.logo {
+		text-decoration: none;
+		font-weight: 700;
+    font-size: 1.25rem; /* 20px */
+		letter-spacing: 0.02em;
+	}
+
+	nav ul {
+		display: flex;
+		gap: 12px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+    @media (min-width: 768px) {
+      gap: 24px;
+    }
+	}
+
+	nav a {
+		text-decoration: none;
+		color: var(--color-text-muted);
+		font-size: calc(14 / 16 * 1rem); /* 14px */
+		transition: color 0.15s ease;
+
+    @media (min-width: 768px) {
+      font-size: 1rem; /* 16px */
+    }
+	}
+
+	nav a:hover {
+		color: var(--color-text);
+	}
+
+	nav a[aria-current='page'] {
+		color: var(--color-text);
+		font-weight: 600;
+	}
+</style>
