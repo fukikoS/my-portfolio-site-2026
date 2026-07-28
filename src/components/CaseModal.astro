@@ -77,7 +77,7 @@
 		display: grid;
 		grid-template-columns: auto 1fr;
 		gap: 4px 12px;
-		margin-bottom: 16px;
+    margin: 0;
 	}
 
 	.modal-body :global(.meta dt) {
@@ -88,6 +88,8 @@
 	.modal-body :global(.meta dd) {
 		margin: 0;
 		font-size: 13px;
+		min-width: 0;
+		overflow-wrap: anywhere;
 	}
 
 	.modal-body :global(.note) {

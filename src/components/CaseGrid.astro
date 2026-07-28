@@ -41,29 +41,31 @@ const { items, emptyMessage } = Astro.props;
 				</div>
 			)}
 			<p class="overview">{item.overview}</p>
-			{item.responsibilities && (
-				<dl class="meta">
-					<dt>担当内容</dt>
-					<dd>{item.responsibilities}</dd>
-				</dl>
-			)}
-			{item.note && <p class="note">{item.note}</p>}
-			{item.site_url && (
-        <dl class="meta">
-          <dt>URL</dt>
-          <dd>
-            <a class="button" href={item.site_url} target="_blank" rel="noopener noreferrer">{item.site_url}</a>
-          </dd>
-        </dl>
-      )}
-				{item.github && (
-        <dl class="meta">
-          <dt>GitHub</dt>
-          <dd>
-            <a class="button" href={item.github} target="_blank" rel="noopener noreferrer">{item.github}</a>
-          </dd>
-        </dl>
-      )}
+      {item.note && <p class="note">{item.note}</p>}
+      <div class="meta-list">
+        {item.responsibilities && (
+          <dl class="meta">
+            <dt>担当内容</dt>
+            <dd>{item.responsibilities}</dd>
+          </dl>
+        )}
+        {item.site_url && (
+          <dl class="meta">
+            <dt>URL</dt>
+            <dd>
+              <a class="button" href={item.site_url} target="_blank" rel="noopener noreferrer">{item.site_url}</a>
+            </dd>
+          </dl>
+        )}
+        {item.github && (
+          <dl class="meta">
+            <dt>GitHub</dt>
+            <dd>
+              <a class="button" href={item.github} target="_blank" rel="noopener noreferrer">{item.github}</a>
+            </dd>
+          </dl>
+        )}
+      </div>
 		</template>
 	))
 }
@@ -136,4 +138,10 @@ const { items, emptyMessage } = Astro.props;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
+
+  .meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 </style>
