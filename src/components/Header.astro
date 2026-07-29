@@ -2,7 +2,6 @@
 import { SITE_NAME } from '../constants';
 
 const navItems = [
-	{ href: '/', label: 'Top' },
 	{ href: '/#projects', label: 'Projects' },
 	{ href: '/#works', label: 'Works' },
 ];
@@ -30,12 +29,17 @@ const currentPath = Astro.url.pathname;
 
 <style>
 	header {
+		position: sticky;
+		top: 0;
+		z-index: 10;
 		max-width: var(--max-width);
 		margin: 0 auto;
 		padding: 16px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		background: var(--color-bg);
+		border-bottom: 1px solid var(--color-border);
 
     @media (min-width: 768px) {
       padding: 24px;
