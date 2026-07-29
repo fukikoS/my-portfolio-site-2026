@@ -85,3 +85,8 @@ const currentPath = Astro.url.pathname;
 		font-weight: 600;
 	}
 </style>
+
+<script>
+	import { setupSmoothAnchorNav } from '../scripts/smoothAnchorNav';
+	setupSmoothAnchorNav(document);
+</script>
