@@ -1,6 +1,5 @@
 ---
 import type { Project } from '../lib/microcms';
-import CaseModal from './CaseModal.astro';
 
 interface Props {
 	items: Project[];
@@ -69,8 +68,6 @@ const { items, emptyMessage } = Astro.props;
 		</template>
 	))
 }
-
-<CaseModal />
 
 <style>
 	.empty {

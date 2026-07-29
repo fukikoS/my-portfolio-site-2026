@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getProfile } from '../lib/microcms';
+import CaseGrid from '../components/CaseGrid.astro';
+import CaseModal from '../components/CaseModal.astro';
+import { getProfile, getProjects, getWorks } from '../lib/microcms';
 import { SITE_NAME } from '../constants';
 
 const profile = await getProfile();
@@ -9,6 +11,9 @@ const skills =
 		.split('\n')
 		.map((skill) => skill.trim().replace(/^[・\-*]\s*/, ''))
 		.filter(Boolean) ?? [];
+
+const projects = await getProjects();
+const works = await getWorks();
 ---
 
 <Layout title="Portfolio" description="制作実績・個人プロジェクトをまとめたポートフォリオサイトです。">
@@ -17,8 +22,8 @@ const skills =
 			<h1>{SITE_NAME}</h1>
 			<p>制作実績と個人プロジェクトをまとめています。</p>
 			<div class="links">
-				<a class="button" href="/works">制作実績を見る</a>
-				<a class="button outline" href="/projects">個人プロジェクトを見る</a>
+				<a class="button" href="#projects">個人プロジェクトを見る</a>
+				<a class="button outline" href="#works">制作実績を見る</a>
 			</div>
 		</section>
 
@@ -52,12 +57,31 @@ const skills =
 				</section>
 			)
 		}
+
+		<section class="case-section" id="projects">
+			<div class="page-header">
+				<h2>Projects</h2>
+				<p>勉強のために個人で開発したプロジェクトです。</p>
+			</div>
+			<CaseGrid items={projects} emptyMessage="現在公開中の個人プロジェクトはありません。" />
+		</section>
+
+		<section class="case-section" id="works">
+			<div class="page-header">
+				<h2>Works</h2>
+				<p>これまでに携わった案件の実績です。</p>
+			</div>
+			<CaseGrid items={works} emptyMessage="現在公開中の制作実績はありません。" />
+		</section>
 	</main>
+
+	<CaseModal />
 </Layout>
 
 <style>
 	.hero {
-		min-height: calc(100vh - 200px);
+		/* min-height: calc(100vh - 200px); */
+    min-height: 300px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -112,6 +136,13 @@ const skills =
 		display: flex;
 		flex-direction: column;
 		gap: 40px;
+	}
+
+	.case-section {
+		padding-top: 64px;
+		margin-top: 64px;
+		border-top: 1px solid var(--color-border);
+		scroll-margin-top: 24px;
 	}
 
 	.eyebrow {
