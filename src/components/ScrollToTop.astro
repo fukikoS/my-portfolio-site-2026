@@ -1,0 +1,61 @@
+<button type="button" class="scroll-to-top" aria-label="ページ上部に戻る">
+	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M12 19V5" />
+		<path d="M5 12l7-7 7 7" />
+	</svg>
+</button>
+
+<style>
+	.scroll-to-top {
+		position: fixed;
+		right: 16px;
+		bottom: calc(16px + var(--footer-overlap, 0px));
+		z-index: 20;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		color: var(--color-text);
+		cursor: pointer;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(8px);
+		transition:
+			opacity 0.3s ease,
+			transform 0.3s ease,
+			visibility 0.3s ease,
+			bottom 0.1s linear;
+
+		@media (min-width: 768px) {
+			right: 24px;
+			bottom: calc(24px + var(--footer-overlap, 0px));
+		}
+	}
+
+	.scroll-to-top.is-visible {
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+	}
+
+	.scroll-to-top:hover {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scroll-to-top {
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	import { setupScrollToTop } from '../scripts/scrollToTop';
+	setupScrollToTop(document);
+</script>

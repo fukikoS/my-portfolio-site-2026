@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ScrollToTop from '../components/ScrollToTop.astro';
 import '../styles/global.css';
 import { SITE_NAME } from '../constants';
 
@@ -30,5 +31,6 @@ const documentTitle = isTopPage || !pageTitle ? SITE_NAME : `${pageTitle} | ${SI
 		<Header />
 		<slot />
 		<Footer />
+		<ScrollToTop />
 	</body>
 </html>
