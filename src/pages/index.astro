@@ -34,11 +34,16 @@ const works = await getWorks();
 						<h2 class="eyebrow">About</h2>
 						<p>{profile.introduction}</p>
 					</div>
-					<div class="profile-intro">
+          {profile.career_vision && (
+            <div class="profile-intro">
+              <h2 class="eyebrow">Career Vision</h2>
+              <p>{profile.career_vision}</p>
+            </div>
+          )}
+					<!-- <div class="profile-intro">
 						<h2 class="eyebrow">Career Vision</h2>
 						<p>{profile.career_vision}</p>
-					</div>
-
+					</div> -->
 
 					{skills.length > 0 && (
 						<div class="">
